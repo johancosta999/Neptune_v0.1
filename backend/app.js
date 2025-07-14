@@ -22,24 +22,28 @@ mongoose
   })
   .catch((err) => console.log(err));
 
+const tankIds = ["tank001", "tank002", "tank003"]; // Add all your tank IDs here
+
 setInterval(async () => {
-  const randomPH = (Math.random() * 14).toFixed(2);         // 0 to 14
-  const randomTDS = Math.floor(Math.random() * 1001);       // 0 to 1000
-  const status = (randomTDS > 700 || randomPH < 5 || randomPH > 8) ? "unsafe" : "safe";
-  const tankId = "tank001"; // or get from an array if you want to simulate multiple tanks
+  for (const tankId of tankIds) {
+    const randomPH = (Math.random() * 14).toFixed(2);         // 0 to 14
+    const randomTDS = Math.floor(Math.random() * 1001);       // 0 to 1000
+    const status = (randomTDS > 700 || randomPH < 5 || randomPH > 8) ? "unsafe" : "safe";
 
-  const record = new Water({
-    phLevel: randomPH,
-    tds: randomTDS,
-    status: status,
-    timestamp: Date.now(),
-    tankId: tankId,
-  });
+    const record = new Water({
+      phLevel: randomPH,
+      tds: randomTDS,
+      status: status,
+      timestamp: Date.now(),
+      tankId: tankId, // now each tank gets its own record
+    });
 
-  try {
-    await record.save();
-    console.log(`✔️ Fake data inserted at ${new Date().toLocaleTimeString()}`);
-  } catch (err) {
-    console.error("❌ Error inserting fake data:", err);
+    try {
+      await record.save();
+      console.log(`✔️ Fake data inserted for ${tankId} at ${new Date().toLocaleTimeString()}`);
+    } catch (err) {
+      console.error(`❌ Error inserting data for ${tankId}:`, err);
+    }
   }
 }, 5 * 60 * 1000); // every 5 minutes
+

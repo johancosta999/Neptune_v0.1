@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useParams } from "react-router-dom"; // ✅ IMPORT THIS
 import {
   LineChart,
   Line,
@@ -12,8 +13,8 @@ import {
 } from "recharts";
 
 function WaterQualityChart() {
+  const { tankId } = useParams(); // ✅ USE THIS INSTEAD OF localStorage
   const [records, setRecords] = useState([]);
-  const tankId = localStorage.getItem("selectedTankId");
   const [range, setRange] = useState("1w");
 
   const handleRangeChange = (e) => {

@@ -26,7 +26,7 @@ function TankDisplay() {
 
   return (
     <div>
-      <Nav/>
+      
       <h1>Available Tanks</h1>
       <table border="1" cellPadding="10">
         <thead>

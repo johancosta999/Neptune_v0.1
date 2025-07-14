@@ -11,10 +11,13 @@ function WaterQualityList() {
   const [records, setRecords] = useState([]);
   const { tankId } = useParams();
   const ComponentsRef = useRef();
+  const [showTable, setShowTable] = useState(false); // hide by default ✅
 
   const fetchData = async () => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/water?tankId=${tankId}`);
+      const res = await axios.get(
+        `http://localhost:5000/api/water?tankId=${tankId}`
+      );
       setRecords(res.data.data);
     } catch (err) {
       console.log(err);
@@ -51,10 +54,8 @@ function WaterQualityList() {
     });
   };
 
-  // ✅ GROUP BY DATE & CALCULATE DAILY AVERAGES
   const getWeeklySummary = () => {
     const grouped = {};
-
     records.forEach((rec) => {
       const date = new Date(rec.timestamp).toLocaleDateString();
       if (!grouped[date]) {
@@ -63,13 +64,16 @@ function WaterQualityList() {
       grouped[date].phTotal += rec.phLevel;
       grouped[date].tdsTotal += rec.tds;
       grouped[date].count += 1;
-      grouped[date].statusCount[rec.status] = (grouped[date].statusCount[rec.status] || 0) + 1;
+      grouped[date].statusCount[rec.status] =
+        (grouped[date].statusCount[rec.status] || 0) + 1;
     });
 
     return Object.entries(grouped).map(([date, values]) => {
       const avgPH = (values.phTotal / values.count).toFixed(2);
       const avgTDS = (values.tdsTotal / values.count).toFixed(2);
-      const frequentStatus = Object.entries(values.statusCount).reduce((a, b) => (a[1] > b[1] ? a : b))[0];
+      const frequentStatus = Object.entries(values.statusCount).reduce((a, b) =>
+        a[1] > b[1] ? a : b
+      )[0];
       return { date, avgPH, avgTDS, frequentStatus };
     });
   };
@@ -102,53 +106,61 @@ function WaterQualityList() {
           ))}
         </tbody>
       </table>
-{/*
-      <h2>📋 Water Quality Records</h2>
-      <Link to="/water-quality/add">
-        <button>Add New Record</button>
-      </Link>
-      <table border="1" cellPadding="10">
-        <thead>
-          <tr>
-            <th>Tank ID</th>
-            <th>ID</th>
-            <th>PH Level</th>
-            <th>TDS</th>
-            <th>Status</th>
-            <th>Timestamp</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {records.map((rec) => (
-            <tr key={rec._id}>
-              <td>{rec.tankId}</td>
-              <td>{rec._id}</td>
-              <td>{rec.phLevel}</td>
-              <td>{rec.tds}</td>
-              <td>{rec.status}</td>
-              <td>{new Date(rec.timestamp).toLocaleString()}</td>
-              <td>
-                <button className="no-print">
-                  <Link to={`/water-quality/edit/${rec._id}`}>Edit</Link>
-                </button>
-                <button className="no-print" onClick={() => handleDelete(rec._id)}>
-                  Delete
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-*/}
-      {/* Hidden printable component */}
-      <div style={{ position: "absolute", left: "-9999px", top: 0, width: "100%" }}>
-        <PrintWaterQuality ref={ComponentsRef} records={records} />
-      </div>
 
-      <button className="no-print" onClick={handleDownloadPDF}>
-        Download PDF
+      <br />
+      <button id="daily-stats" onClick={() => setShowTable((prev) => !prev)}>
+        {showTable ? "Hide Daily Information" : "View Daily Information"}
       </button>
+
+      {showTable && (
+        <>
+          <h2>📋 Water Quality Records</h2>
+          <Link to="/water-quality/add">
+            <button>Add New Record</button>
+          </Link>
+          <div ref={ComponentsRef}>
+            <table border="1" cellPadding="10">
+              <thead>
+                <tr>
+                  <th>Tank ID</th>
+                  <th>ID</th>
+                  <th>PH Level</th>
+                  <th>TDS</th>
+                  <th>Status</th>
+                  <th>Timestamp</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {records.map((rec) => (
+                  <tr key={rec._id}>
+                    <td>{rec.tankId}</td>
+                    <td>{rec._id}</td>
+                    <td>{rec.phLevel}</td>
+                    <td>{rec.tds}</td>
+                    <td>{rec.status}</td>
+                    <td>{new Date(rec.timestamp).toLocaleString()}</td>
+                    <td>
+                      <button className="no-print">
+                        <Link to={`/water-quality/edit/${rec._id}`}>Edit</Link>
+                      </button>
+                      <button
+                        className="no-print"
+                        onClick={() => handleDelete(rec._id)}
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <button className="no-print" onClick={handleDownloadPDF}>
+            Download PDF
+          </button>
+        </>
+      )}
     </div>
   );
 }

@@ -39,10 +39,13 @@ function EditWaterQuality() {
     }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    sendRequest().then(() => history("/water-quality/list"));
-  };
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+  const tankId = localStorage.getItem("selectedTankId");
+  await sendRequest();
+  history(`/tank/${tankId}/water-quality`);
+};
+
 
   return (
     <div>
