@@ -2,8 +2,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-import Nav from "../Nav/nav";
-
+import AdminNav from "../Nav/adminNav";
 
 function TankDisplay() {
   const navigate = useNavigate();
@@ -26,7 +25,8 @@ function TankDisplay() {
 
   return (
     <div>
-      
+      <AdminNav />
+
       <h1>Available Tanks</h1>
       <table border="1" cellPadding="10">
         <thead>
@@ -46,9 +46,10 @@ function TankDisplay() {
               <td>{tank.location}</td>
               <td>{tank.capacity}</td>
               <td>
-                <Link to={`/tank/${tank.tankId}/water-quality`}>
+                <Link to={`/tank/${tank.tankId}/dashboard`}>
                   <button>Select</button>
                 </Link>
+                
               </td>
             </tr>
           ))}

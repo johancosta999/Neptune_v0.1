@@ -144,6 +144,7 @@ function WaterQualityList() {
                       <button className="no-print">
                         <Link to={`/water-quality/edit/${rec._id}`}>Edit</Link>
                       </button>
+                      
                       <button
                         className="no-print"
                         onClick={() => handleDelete(rec._id)}

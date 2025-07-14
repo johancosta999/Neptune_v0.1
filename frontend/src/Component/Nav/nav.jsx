@@ -1,33 +1,30 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import "../Nav/nav.css";  // optional styling
 
 function Nav() {
+  const { tankId } = useParams();  // ✅ corrected useParams usage
+
   return (
-    <div>
     <nav className="admin-nav">
       <ul>
         <li>
-          <Link to="/">Dashboard</Link>
+          <Link to={`/tank/${tankId}/dashboard`}>Tank Dashboard</Link>
         </li>
         <li>
-          <Link to="/water-quality/list">Water Quality</Link>
+          <Link to={`/tank/${tankId}/water-quality`}>Water Quality</Link>
         </li>
         <li>
-          <Link to="/tank-level">Tank Level</Link>
+          <Link to={`/tank/${tankId}/water-level`}>Tank Level</Link>
         </li>
         <li>
-          <Link to="/issue-reports">Issue Reports</Link>
+          <Link to={`/tank/${tankId}/issues`}>Issue Reports</Link>
         </li>
         <li>
-          <Link to="/user-management">User Management</Link>
-        </li>
-        <li>
-          <Link to="/delivery">Water Delivery</Link>
+          <Link to={"/"}>HOME</Link>
         </li>
       </ul>
     </nav>
-    </div>
   );
 }
 
