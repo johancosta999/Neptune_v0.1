@@ -66,13 +66,13 @@ const getById = async(req , res, next) =>{
 // Update Record
 const updateWaterLevel = async (req, res, next) => {
   const id = req.params.id;
-  const {  tankId,location, status } = req.body;
+  const {  currentLevel,maxCapacity,status } = req.body;
 
   let record;
   try {
     record = await WaterLevelModel.findByIdAndUpdate(id, {
-      tankId,
-      location,
+      currentLevel,
+      maxCapacity,
       status
     }, { new: true });
   } catch (err) {

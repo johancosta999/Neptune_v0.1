@@ -113,6 +113,15 @@ function AddWater() {
           required
           style={inputStyle}
         />
+          <label style={{ color: "#1e88e5", fontWeight: "bold" }}>Status:</label>
+        <input
+          type="text"
+          name="status"
+          value={form.status}
+          onChange={handleChange}
+          required
+          style={inputStyle}
+        />
 
         {/* Submit */}
         <button type="submit" style={buttonStyle}>
