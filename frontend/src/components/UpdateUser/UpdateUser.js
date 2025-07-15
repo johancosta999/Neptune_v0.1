@@ -3,77 +3,103 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function UpdateUser() {
-  const { _id } = useParams(); // you use "_id" in route
+  const { id } = useParams();
   const navigate = useNavigate();
 
   const [inputs, setInputs] = useState({
     name: "",
     gmail: "",
     age: "",
-    Address: ""  // 🔴 match exactly with backend field
+    Address: ""
   });
 
   useEffect(() => {
-    axios.get(`http://localhost:5000/api/users/${_id}`)
-      .then(res => setInputs(res.data))
-      .catch(err => console.error("Error fetching user:", err));
-  }, [_id]);
+    if (!id) {
+      console.error("❌ No user ID provided in route");
+      return;
+    }
+
+    const fetchData = async () => {
+      try {
+        const res = await axios.get(`http://localhost:5000/users/${id}`);
+        console.log("✅ Fetched user:", res.data);
+        setInputs(res.data.user || res.data);
+      } catch (err) {
+        console.error("❌ Error fetching user:", err);
+      }
+    };
+
+    fetchData();
+  }, [id]);
 
   const handleChange = (e) => {
-    setInputs({ ...inputs, [e.target.name]: e.target.value });
+    setInputs((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value
+    }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    axios.put(`http://localhost:5000/api/users/${_id}`, inputs)
-      .then(() => {
-        console.log("User updated successfully");
-        navigate("/UserDetails");
-      })
-      .catch(err => console.error("Error updating user:", err));
+    try {
+      await axios.put(`http://localhost:5000/users/${id}`, inputs);
+      navigate("/UserDetails");
+    } catch (err) {
+      console.error("❌ Error updating user:", err);
+    }
   };
 
   return (
-    <div className="form-container">
+    <div>
       <h2>Update User</h2>
       <form onSubmit={handleSubmit}>
-        <label>Name:</label>
+
+        <label htmlFor="name">Name:</label>
         <input
+          id="name"
           type="text"
           name="name"
-          value={inputs.name}
+          value={inputs.name || ""}
           onChange={handleChange}
           required
+          placeholder="Enter name"
         />
 
-        <label>Gmail:</label>
+        <label htmlFor="gmail">Gmail:</label>
         <input
+          id="gmail"
           type="email"
           name="gmail"
-          value={inputs.gmail}
+          value={inputs.gmail || ""}
           onChange={handleChange}
           required
+          placeholder="Enter email"
         />
 
-        <label>Age:</label>
+        <label htmlFor="age">Age:</label>
         <input
+          id="age"
           type="number"
           name="age"
-          value={inputs.age}
+          value={inputs.age || ""}
           onChange={handleChange}
           required
+          placeholder="Enter age"
         />
 
-        <label>Address:</label>
+        <label htmlFor="Address">Address:</label>
         <input
+          id="Address"
           type="text"
-          name="Address"  // 🔴 Must match state key and backend field
-          value={inputs.Address}
+          name="Address"
+          value={inputs.Address || ""}
           onChange={handleChange}
           required
+          placeholder="Enter address"
         />
 
-        <button type="submit">Update</button>
+        <br /><br />
+        <button type="submit">Update User</button>
       </form>
     </div>
   );
