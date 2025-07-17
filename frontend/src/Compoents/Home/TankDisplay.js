@@ -46,7 +46,7 @@ function TankDisplay() {
               <td>{tank.location}</td>
               <td>{tank.capacity}</td>
               <td>
-                <Link to={`/tank/${tank.tankId}/water-quality`}>
+                <Link to={`/tank/${tank.tankId}/tank-level`}>
                   <button>Select</button>
                 </Link>
               </td>

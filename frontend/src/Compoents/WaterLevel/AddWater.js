@@ -8,7 +8,7 @@ function AddWater() {
     currentLevel: "",
     maxCapacity: "",
     location: "",
-    status: "Normal",
+    status: "",
     recordedAt: new Date().toISOString(),
   });
 
@@ -32,7 +32,7 @@ function AddWater() {
         currentLevel: "",
         maxCapacity: "",
         location: "",
-        status: "Normal",
+        status: "",
         recordedAt: new Date().toISOString(),
       });
     } catch (err) {
