@@ -8,7 +8,7 @@ const levelModel = require("../Model/WaterLevelModel");
 const WaterLevelControl = require("../Controlers/WaterLevelControl");
 
 router.get("/", WaterLevelControl.getallWaterlevel);
-router.post("/", WaterLevelControl.addWaterLevel);
+router.post("/:id", WaterLevelControl.addWaterLevel);
 router.get("/:id", WaterLevelControl.getById);
 router.put("/:id", WaterLevelControl.updateWaterLevel);
 router.delete("/:id", WaterLevelControl.deleteWaterRecord);

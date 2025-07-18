@@ -10,14 +10,9 @@ const waterLevelSchema = new Schema({
     type: Number, // in litters
     required: true,
   },
-  maxCapacity: {
-    type: Number, // in litters
-    required: true,
-  },
-  location: {
-    type: String,
-    required: true,
-  },
+  location: { type: String },
+  maxCapacity: { type: Number },
+
   status: {
     type: String,
     default: "Normal",
@@ -28,12 +23,5 @@ const waterLevelSchema = new Schema({
   },
 });
 
-waterLevelSchema.virtual("percentage").get(function () {
-  if (this.maxCapacity === 0) return 0;
-  return ((this.currentLevel / this.maxCapacity) * 100).toFixed(2);
-});
-
-waterLevelSchema.set("toObject", { virtuals: true });
-waterLevelSchema.set("toJSON", { virtuals: true });
 
 module.exports = mongoose.model("WaterLevelModel", waterLevelSchema);

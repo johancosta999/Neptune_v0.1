@@ -28,7 +28,7 @@ function AddWater() {
     e.preventDefault();
 
     try {
-      const res = await axios.post("http://localhost:5000/data", form);
+      const res = await axios.post("http://localhost:5000/water-level/${tankId}", form);
       alert("✅ Water level record added!");
       console.log(res.data);
       setForm({
