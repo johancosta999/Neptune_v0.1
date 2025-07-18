@@ -9,8 +9,8 @@ import PrintWaterLevel from "../WaterLevel/PrintWaterLevel";
 import WaterLevelChart from "../WaterLevel/WaterLevelChart";
 
 function WaterLevelList() {
-  
   const [records, setRecords] = useState([]);
+  const [weeklySummary, setWeeklySummary] = useState([]);
   const { tankId } = useParams();
   const ComponentsRef = useRef();
   const [showTable, setShowTable] = useState(false);
@@ -18,7 +18,6 @@ function WaterLevelList() {
   const fetchData = async () => {
     try {
       const res = await axios.get(`http://localhost:5000/api/water?tankId=${tankId}`);
-
       setRecords(res.data.data);
     } catch (err) {
       console.log(err);
@@ -29,13 +28,18 @@ function WaterLevelList() {
     fetchData();
     const interval = setInterval(fetchData, 5000);
     return () => clearInterval(interval);
-  }, []);
+  }, [tankId]);
+
+  useEffect(() => {
+    if (records.length > 0) {
+      const summary = getWeeklyWaterLevelSummary();
+      setWeeklySummary(summary);
+    }
+  }, [records]);
 
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this record?")) {
       try {
-        
-
         await axios.delete(`http://localhost:5000/api/water/${id}`);
         fetchData();
       } catch (err) {
@@ -59,22 +63,29 @@ function WaterLevelList() {
 
   const getWeeklyWaterLevelSummary = () => {
     const grouped = {};
+
     records.forEach((rec) => {
       const date = new Date(rec.recordedAt || rec.timestamp).toLocaleDateString();
+      const level = rec.waterLevel ?? rec.level ?? rec.currentLevel ?? 0;
+
       if (!grouped[date]) {
         grouped[date] = { levelTotal: 0, count: 0 };
       }
-      grouped[date].levelTotal += rec.waterLevel;
+
+      grouped[date].levelTotal += level;
       grouped[date].count += 1;
     });
 
     return Object.entries(grouped).map(([date, values]) => {
-      const avgLevel = (values.levelTotal / values.count).toFixed(2);
-      return { date, avgLevel };
+      const avgLevel =
+        values.count > 0 ? (values.levelTotal).toFixed(2) : "0.00";
+
+      return {
+        date,
+        avgLevel,
+      };
     });
   };
-
-  const weeklySummary = getWeeklyWaterLevelSummary();
 
   return (
     <div>
@@ -128,7 +139,7 @@ function WaterLevelList() {
                   <tr key={rec._id}>
                     <td>{rec.tankId}</td>
                     <td>{rec.location}</td>
-                    <td>{rec.currentLevel}%</td>
+                    <td>{rec.currentLevel ?? rec.waterLevel ?? rec.level ?? 0}%</td>
                     <td>{rec.status}</td>
                     <td>{new Date(rec.recordedAt || rec.timestamp).toLocaleString()}</td>
                     <td>
@@ -154,5 +165,3 @@ function WaterLevelList() {
 }
 
 export default WaterLevelList;
-
-

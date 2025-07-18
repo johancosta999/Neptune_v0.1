@@ -50,18 +50,18 @@ function WaterLevelChart() {
   }, [tankId]);
 
   return (
-    <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
-      <h2 style={{ textAlign: "center", color: "#1976d2" }}>
-        📊 Water Level Chart (%) - {tankId}
-      </h2>
+    <div>
+      <h3>
+        📉 Water Level Chart (%) - {tankId}
+      </h3>
 
-      <div style={{ textAlign: "center", marginBottom: "20px" }}>
+      <div>
         <label htmlFor="range">Select Time Range: </label>
         <select
           id="range"
           value={range}
           onChange={(e) => setRange(e.target.value)}
-          style={{ padding: "8px", fontSize: "14px", marginLeft: "10px" }}
+          
         >
           <option value="1h">Last Hour</option>
           <option value="1d">Last Day</option>
@@ -69,7 +69,11 @@ function WaterLevelChart() {
         </select>
       </div>
 
-      <ResponsiveContainer width="100%" height={500}>
+      <ResponsiveContainer
+        width="85%"
+        height={500}
+        style={{ margin: "0 auto" }}
+      >
         <LineChart data={filteredRecords}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis
@@ -94,9 +98,8 @@ function WaterLevelChart() {
           <Legend />
           <Line
             type="monotone"
-            dataKey="waterLevel"
-            stroke="#42a5f5"
-            strokeWidth={2}
+            dataKey="currentLevel"
+            stroke="#8884d8"
             activeDot={{ r: 6 }}
             name="Water Level"
           />

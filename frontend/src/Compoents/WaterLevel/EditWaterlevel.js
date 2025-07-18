@@ -7,16 +7,19 @@ function EditWaterlevel() {
     currentLevel: "",
     maxCapacity: "",
     status: "",
+    tankId: "", // ✅ Add this
   });
 
   const { id } = useParams(); // extract tank record ID from URL
   const navigate = useNavigate();
+  
+  const { tankId } = useParams();
 
   // Fetch existing data on component mount
   useEffect(() => {
     const fetchHandler = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/data/${id}`);
+        const res = await axios.get(`http://localhost:5000/api/water/${id}`);
         setInputs(res.data.record);
       } catch (err) {
         console.error("Fetch error:", err);
@@ -30,13 +33,16 @@ function EditWaterlevel() {
     e.preventDefault();
     
     try {
-      await axios.put(`http://localhost:5000/data/${id}`, {
+      await axios.put(`http://localhost:5000/api/water/${id}`, {
         currentLevel: Number(inputs.currentLevel),
         maxCapacity: Number(inputs.maxCapacity),
         status: String(inputs.status),
       });
       alert("✅ Water level updated!");
-      navigate("/water-level"); // Adjust the path as needed
+
+      
+      navigate(`/tank/${inputs.tankId}/tank-level`);
+ // Adjust the path as needed
     } catch (err) {
       console.error("Update failed:", err);
       alert("❌ Failed to update record.");

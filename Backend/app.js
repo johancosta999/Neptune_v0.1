@@ -41,7 +41,7 @@ async function generateWaterLevels() {
 generateWaterLevels();
 
 // Schedule generation every 1 minute (60000 ms)
-setInterval(generateWaterLevels, 60 * 1000);
+setInterval(generateWaterLevels, 5 * 60 * 1000);
 
 mongoose
   .connect(
