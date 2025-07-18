@@ -4,26 +4,25 @@ const Waterlevel = require("../Model/WaterLevelModel");
 const getallWaterlevel = async (req, res, next) => {
   const { tankId } = req.query;
 
-  let data;
-  //get all data
   try {
-    data = await WaterLevelModel.find();
+    let data;
     if (tankId) {
       data = await WaterLevelModel.find({ tankId: tankId });
     } else {
       data = await WaterLevelModel.find();
     }
-    res.status(200).json({ data });
+
+    if (!data || data.length === 0) {
+      return res.status(404).json({ message: "No water level records found." });
+    }
+
+    return res.status(200).json({ data });
   } catch (err) {
-    console.log(err);
-  }
-  if (!data) {
-    return res.status(404).json({ message: "No water Level records found." });
     console.error(err);
-    res.status(500).json({ message: "Server error" });
+    return res.status(500).json({ message: "Server error" });
   }
-  return res.status(200).json({ data });
 };
+
 
 //insert data
 const addWaterLevel = async (req, res, next) => {

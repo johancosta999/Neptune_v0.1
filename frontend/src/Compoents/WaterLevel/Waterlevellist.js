@@ -17,6 +17,7 @@ function WaterLevelList() {
   const fetchData = async () => {
     try {
       const res = await axios.get(`http://localhost:5000/api/water?tankId=${tankId}`);
+
       setRecords(res.data.data);
     } catch (err) {
       console.log(err);
@@ -32,6 +33,8 @@ function WaterLevelList() {
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this record?")) {
       try {
+        
+
         await axios.delete(`http://localhost:5000/api/water/${id}`);
         fetchData();
       } catch (err) {
@@ -75,6 +78,9 @@ function WaterLevelList() {
   return (
     <div>
       <Nav />
+
+      <WaterLevelChart records={records} />
+
       <h2>📊 Weekly Water Level Summary</h2>
       <table border="1" cellPadding="10">
         <thead>
@@ -121,7 +127,7 @@ function WaterLevelList() {
                   <tr key={rec._id}>
                     <td>{rec.tankId}</td>
                     <td>{rec.location}</td>
-                    <td>{rec.waterLevel}%</td>
+                    <td>{rec.currentLevel}%</td>
                     <td>{rec.status}</td>
                     <td>{new Date(rec.recordedAt || rec.timestamp).toLocaleString()}</td>
                     <td>

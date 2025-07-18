@@ -1,13 +1,17 @@
 import React, { useState } from "react";
 import axios from "axios";
 import Nav from "../Nav/Nav";
+import { useParams } from "react-router-dom";
 
 function AddWater() {
+
+  const { tankId } = useParams();
+
   const [form, setForm] = useState({
-    tankId: "",
+    
     currentLevel: "",
-    maxCapacity: "",
-    location: "",
+    
+    
     status: "",
     recordedAt: new Date().toISOString(),
   });
@@ -70,16 +74,7 @@ function AddWater() {
           fontFamily: "Arial, sans-serif",
         }}
       >
-        {/* Tank ID */}
-        <label style={{ color: "#1e88e5", fontWeight: "bold" }}>Tank ID:</label>
-        <input
-          type="text"
-          name="tankId"
-          value={form.tankId}
-          onChange={handleChange}
-          required
-          style={inputStyle}
-        />
+        
 
         {/* Current Level */}
         <label style={{ color: "#1e88e5", fontWeight: "bold" }}>Current Level (L):</label>
@@ -92,27 +87,8 @@ function AddWater() {
           style={inputStyle}
         />
 
-        {/* Max Capacity */}
-        <label style={{ color: "#1e88e5", fontWeight: "bold" }}>Max Capacity (L):</label>
-        <input
-          type="number"
-          name="maxCapacity"
-          value={form.maxCapacity}
-          onChange={handleChange}
-          required
-          style={inputStyle}
-        />
 
-        {/* Location */}
-        <label style={{ color: "#1e88e5", fontWeight: "bold" }}>Location:</label>
-        <input
-          type="text"
-          name="location"
-          value={form.location}
-          onChange={handleChange}
-          required
-          style={inputStyle}
-        />
+        
           <label style={{ color: "#1e88e5", fontWeight: "bold" }}>Status:</label>
         <input
           type="text"

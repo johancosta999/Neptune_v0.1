@@ -36,7 +36,9 @@ function WaterLevelChart() {
     else if (range === "1d") rangeTime = now - 24 * 60 * 60 * 1000;
     else if (range === "1w") rangeTime = now - 7 * 24 * 60 * 60 * 1000;
 
-    return data.filter((d) => new Date(d.recordedAt || d.timestamp) >= rangeTime);
+    return data.filter(
+      (d) => new Date(d.recordedAt || d.timestamp) >= rangeTime
+    );
   };
 
   const filteredRecords = filterByRange(records);
@@ -49,7 +51,9 @@ function WaterLevelChart() {
 
   return (
     <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
-      <h2 style={{ textAlign: "center", color: "#1976d2" }}>📊 Water Level Chart (%)</h2>
+      <h2 style={{ textAlign: "center", color: "#1976d2" }}>
+        📊 Water Level Chart (%) - {tankId}
+      </h2>
 
       <div style={{ textAlign: "center", marginBottom: "20px" }}>
         <label htmlFor="range">Select Time Range: </label>
@@ -80,7 +84,11 @@ function WaterLevelChart() {
           />
           <YAxis
             domain={[0, 100]}
-            label={{ value: "Water Level (%)", angle: -90, position: "insideLeft" }}
+            label={{
+              value: "Water Level (%)",
+              angle: -90,
+              position: "insideLeft",
+            }}
           />
           <Tooltip />
           <Legend />
