@@ -11,7 +11,8 @@ function WaterQualityList() {
   const [records, setRecords] = useState([]);
   const { tankId } = useParams();
   const ComponentsRef = useRef();
-  const [showTable, setShowTable] = useState(false); // hide by default ✅
+  const [showTable, setShowTable] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(""); // ✅ New state
 
   const fetchData = async () => {
     try {
@@ -78,7 +79,16 @@ function WaterQualityList() {
     });
   };
 
-  const weeklySummary = getWeeklySummary();
+  // ✅ Apply filter for both tables
+  const filteredSummary = getWeeklySummary().filter((row) =>
+    selectedDate ? row.date === new Date(selectedDate).toLocaleDateString() : true
+  );
+
+  const filteredRecords = records.filter((rec) =>
+    selectedDate
+      ? new Date(rec.timestamp).toLocaleDateString() === new Date(selectedDate).toLocaleDateString()
+      : true
+  );
 
   return (
     <div>
@@ -86,6 +96,17 @@ function WaterQualityList() {
       <WaterQualityChart records={records} />
 
       <h2>📊 Weekly Water Quality Summary</h2>
+
+      {/* ✅ Date Filter */}
+      <label>📅 Filter by Date: </label>
+      <input
+        type="date"
+        value={selectedDate}
+        onChange={(e) => setSelectedDate(e.target.value)}
+      />
+      <button onClick={() => setSelectedDate("")}>Reset</button>
+
+      {/* ✅ Weekly Summary Table */}
       <table border="1" cellPadding="10">
         <thead>
           <tr>
@@ -96,7 +117,7 @@ function WaterQualityList() {
           </tr>
         </thead>
         <tbody>
-          {weeklySummary.map((row, i) => (
+          {filteredSummary.map((row, i) => (
             <tr key={i}>
               <td>{row.date}</td>
               <td>{row.avgPH}</td>
@@ -112,6 +133,7 @@ function WaterQualityList() {
         {showTable ? "Hide Daily Information" : "View Daily Information"}
       </button>
 
+      {/* ✅ Detailed Table */}
       {showTable && (
         <>
           <h2>📋 Water Quality Records</h2>
@@ -132,7 +154,7 @@ function WaterQualityList() {
                 </tr>
               </thead>
               <tbody>
-                {records.map((rec) => (
+                {filteredRecords.map((rec) => (
                   <tr key={rec._id}>
                     <td>{rec.tankId}</td>
                     <td>{rec._id}</td>
@@ -144,7 +166,6 @@ function WaterQualityList() {
                       <button className="no-print">
                         <Link to={`/water-quality/edit/${rec._id}`}>Edit</Link>
                       </button>
-                      
                       <button
                         className="no-print"
                         onClick={() => handleDelete(rec._id)}
