@@ -119,7 +119,7 @@ function WaterLevelList() {
       {showTable && (
         <>
           <h2>📋 Water Level Records</h2>
-          <Link to="/tank-level">
+          <Link to={`/water-level/add/${tankId}`}>
             <button>Add New Water Level</button>
           </Link>
           <div ref={ComponentsRef}>

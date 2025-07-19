@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import axios from "axios";
 import Nav from "../Nav/Nav";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 function AddWater() {
 
   const { tankId } = useParams();
-
+  const history = useNavigate();
   const [form, setForm] = useState({
     
     currentLevel: "",
@@ -24,26 +25,34 @@ function AddWater() {
     }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    try {
-      const res = await axios.post("http://localhost:5000/water-level/${tankId}", form);
-      alert("✅ Water level record added!");
-      console.log(res.data);
-      setForm({
-        tankId: "",
-        currentLevel: "",
-        maxCapacity: "",
-        location: "",
-        status: "",
-        recordedAt: new Date().toISOString(),
-      });
-    } catch (err) {
-      console.error("❌ Error:", err);
-      alert("❌ Failed to add water level.");
-    }
-  };
+  try {
+    const res = await axios.post(`http://localhost:5000/api/water/${tankId}`, {
+      tankId: tankId,
+      currentLevel: form.currentLevel,
+      status: form.status,
+      recordedAt: new Date().toISOString(), // this gets updated right before sending
+    });
+
+    alert("✅ Water level record added!");
+    console.log(res.data);
+
+    setForm({
+      currentLevel: "",
+      status: "",
+      recordedAt: "", // reset recordedAt too
+    });
+
+    history(`/tank/${tankId}/tank-level`)
+
+  } catch (err) {
+    console.error("❌ Error:", err);
+    alert("❌ Failed to add water level.");
+  }
+};
+
 
   return (
     <div

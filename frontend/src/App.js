@@ -14,7 +14,7 @@ function App() {
     <div>
       <Routes>
         <Route path="/" element={<TankDisplay />} />
-         <Route path="/water-level/:id" element={<AddWaterLevel />} />
+         <Route path="/water-level/add/:tankId" element={<AddWaterLevel />} />
          <Route path="/water-level/edit/:id" element={<EditWaterlevel />} />
          <Route path="/tank/:tankId/tank-level" element={<Waterlevellist/>} />
          <Route path="/tank/:tankId/dashboard" element={<TankDashboard />} />
