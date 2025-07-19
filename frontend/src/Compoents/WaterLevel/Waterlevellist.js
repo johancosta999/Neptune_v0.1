@@ -80,9 +80,12 @@ function WaterLevelList() {
       const avgLevel =
         values.count > 0 ? (values.levelTotal).toFixed(2) : "0.00";
 
+      const counts = avgLevel/100;
+
       return {
         date,
         avgLevel,
+        counts,
       };
     });
   };
@@ -99,6 +102,7 @@ function WaterLevelList() {
           <tr>
             <th>Date</th>
             <th>Average Water Level (%)</th>
+            <th>Refill Cycles</th>
           </tr>
         </thead>
         <tbody>
@@ -106,6 +110,7 @@ function WaterLevelList() {
             <tr key={i}>
               <td>{row.date}</td>
               <td>{row.avgLevel}%</td>
+              <td>{row.counts}</td>
             </tr>
           ))}
         </tbody>
